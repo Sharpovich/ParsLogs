@@ -5,47 +5,44 @@
 в отдельный файл
 """
 import re
-from collections import Counter
-import csv
 
 
-def reader(filename):
-    """
-    Функция принимает файл и обрабатывает его регулярным выражением
-    :param filename:
-    :return: список данных ip-адресов
-    """
-    regexp = r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
-    with open(filename) as f:
-        log = f.read()
-        lst = re.findall(regexp, log)
-    return lst
+def openFile():
+
+    file = enter_filename()
+    regexps = enter_regExp()
+    with open(file) as f:
+        """
+        Прописать итерацию в итерации
+        за счёт последовательности из регулярных выражений
+        """
+        for log in f:  # итерация строк файла
+            for regexp in regexps:  # итерация регулярных выражений
+                lst_total = re.findall(regexp, log)
+                for log_write in lst_total:
+                    with open(f"NameOutputFile_{str(file).split('.')[0]}.{str(file).split('.')[-1]}", "a") as f:
+                        f.write(f"{log_write}\n")
+                        continue
+    return regexps
 
 
-def count(lst):
-    """
-    Коунтер принимает список данных ip-адресов и считает вхождения уникальных
-    :param lst:
-    :return: словарь данных
-    """
-    return Counter(lst)
+def enter_regExp():
+    regexps = [r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}', r'\"(.+)\sHTTP.+?\"', ]
+    while True:
+        regexp = input("Please enter a regular expressions: ")
+        if regexp != "end":
+            regexps.append(regexp)
+            continue
+        else:
+            break
+    return regexps
 
 
-def writeCsv(count):
-    """
-    Принимает словарь данных и выводит информацию в файл CSV
-    :param count:
-    :return: file CSV
-    """
-    with open("output.csv", "w") as csvfile:
-        writer = csv.writer(csvfile)
-
-        header = ['IP', 'Frequency']
-        writer.writerow(header)
-
-        for item in count:
-            writer.writerow((item, count[item]))
+def enter_filename():
+    filename = input("Please, enter a your filename")
+    if filename == "": filename = "test.log"
+    return filename
 
 
 if __name__ == '__main__':
-    writeCsv(count(reader("test.log")))
+    openFile()
