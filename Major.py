@@ -12,10 +12,6 @@ def openFile():
     file = enter_filename()
     regexps = enter_regExp()
     with open(file) as f:
-        """
-        Прописать итерацию в итерации
-        за счёт последовательности из регулярных выражений
-        """
         for log in f:  # итерация строк файла
             for regexp in regexps:  # итерация регулярных выражений
                 lst_total = re.findall(regexp, log)
